@@ -95,4 +95,3 @@ describe("Web Tables - Bulk Registration", () => {
       });
   });
 });
-npm install @4tw/cypress-drag-drop --save-dev
