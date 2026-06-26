@@ -25,6 +25,32 @@ npm install
 ```
 
 ---
+## Dependencies & Plugins
+
+| Package | Versi | Kegunaan |
+|---------|-------|----------|
+| cypress | ^15.18.0 | Framework automation testing utama |
+| csv-parse | latest | Parse data dari file CSV untuk data-driven testing |
+| @4tw/cypress-drag-drop | latest | Plugin drag and drop untuk Cypress |
+| cypress-real-events | latest | Plugin real mouse/keyboard events untuk Cypress |
+
+### Cara Install Manual (jika diperlukan):
+
+```bash
+# Install Cypress
+npm install cypress --save-dev
+
+# Install CSV Parse
+npm install csv-parse --save-dev
+
+# Install plugin Drag and Drop
+npm install @4tw/cypress-drag-drop --save-dev
+
+# Install plugin Real Events
+npm install cypress-real-events --save-dev
+```
+
+> **Note:** Jika sudah melakukan `npm install` setelah clone repository, semua dependencies di atas akan otomatis terinstall karena sudah terdaftar di `package.json`.
 
 ## Struktur Project
 

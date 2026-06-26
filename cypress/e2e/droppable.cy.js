@@ -1,47 +1,67 @@
-describe('Droppable - Drag and Drop', () => {
-  it('should successfully drag element to drop target', () => {
-    cy.visit('https://demoqa.com/droppable')
-    cy.wait(2000)
+describe("Droppable - Drag and Drop", () => {
+  it("should successfully drag element to drop target", () => {
+    cy.visit("https://demoqa.com/droppable");
+    cy.wait(2000);
 
-    cy.window().then(win => {
-      cy.get('#draggable').then($drag => {
-        cy.get('#droppable').then($drop => {
-          const dragRect = $drag[0].getBoundingClientRect()
-          const dropRect = $drop[0].getBoundingClientRect()
+    cy.window().then((win) => {
+      cy.get("#draggable").then(($drag) => {
+        cy.get("#droppable").then(($drop) => {
+          const dragRect = $drag[0].getBoundingClientRect();
+          const dropRect = $drop[0].getBoundingClientRect();
 
-          const dragStart = new win.MouseEvent('mousedown', {
-            bubbles: true, cancelable: true, view: win,
-            clientX: dragRect.left + 10,
-            clientY: dragRect.top + 10
-          })
-          $drag[0].dispatchEvent(dragStart)
+          // step 1: mousedown di draggable
+          $drag[0].dispatchEvent(
+            new win.MouseEvent("mousedown", {
+              bubbles: true,
+              cancelable: true,
+              view: win,
+              clientX: dragRect.left + 10,
+              clientY: dragRect.top + 10,
+            }),
+          );
 
-          cy.wait(100)
-
-          const moveSteps = 10
-          for (let i = 1; i <= moveSteps; i++) {
-            const moveX = dragRect.left + 10 + ((dropRect.left + 10 - dragRect.left - 10) * i / moveSteps)
-            const moveY = dragRect.top + 10 + ((dropRect.top + 10 - dragRect.top - 10) * i / moveSteps)
-            const mouseMove = new win.MouseEvent('mousemove', {
-              bubbles: true, cancelable: true, view: win,
-              clientX: moveX, clientY: moveY
-            })
-            win.document.dispatchEvent(mouseMove)
+          // step 2: mousemove bertahap dari drag ke drop
+          const steps = 20;
+          for (let i = 1; i <= steps; i++) {
+            const x = dragRect.left + 10 + ((dropRect.left + dropRect.width / 2 - dragRect.left - 10) * i) / steps;
+            const y = dragRect.top + 10 + ((dropRect.top + dropRect.height / 2 - dragRect.top - 10) * i) / steps;
+            win.document.dispatchEvent(
+              new win.MouseEvent("mousemove", {
+                bubbles: true,
+                cancelable: true,
+                view: win,
+                clientX: x,
+                clientY: y,
+              }),
+            );
           }
 
-          cy.wait(200)
+          // step 3: mouseup di droppable
+          $drop[0].dispatchEvent(
+            new win.MouseEvent("mouseup", {
+              bubbles: true,
+              cancelable: true,
+              view: win,
+              clientX: dropRect.left + dropRect.width / 2,
+              clientY: dropRect.top + dropRect.height / 2,
+            }),
+          );
 
-          const mouseUp = new win.MouseEvent('mouseup', {
-            bubbles: true, cancelable: true, view: win,
-            clientX: dropRect.left + 10,
-            clientY: dropRect.top + 10
-          })
-          $drop[0].dispatchEvent(mouseUp)
-        })
-      })
-    })
+          // step 4: trigger drop event di droppable
+          $drop[0].dispatchEvent(
+            new win.MouseEvent("drop", {
+              bubbles: true,
+              cancelable: true,
+              view: win,
+              clientX: dropRect.left + dropRect.width / 2,
+              clientY: dropRect.top + dropRect.height / 2,
+            }),
+          );
+        });
+      });
+    });
 
-    cy.wait(1000)
-    cy.get('#droppable').should('contain.text', 'Dropped!')
-  })
-})
+    cy.wait(2000);
+    cy.get("#droppable").should("contain.text", "Dropped!");
+  });
+});
